@@ -4,7 +4,7 @@
 
 Aureon is a full-stack financial analytics platform built for **Hack in Hills '26 (Problem 03 — Commodity Derivatives Intelligence)**. 
 
-This repository implements **Stage 1: Project Foundation**, **Stage 2: MCX daily Bhavcopy ingestion and validation**, **Stage 3: gold contract normalization and relative-value analytics**, and **Stage 4: explainable relative-value signal classification**. It does not download live MCX data, provide financial advice, or execute trades.
+This repository implements **Stage 1: Project Foundation**, **Stage 2: MCX daily Bhavcopy ingestion and validation**, **Stage 3: gold contract normalization and relative-value analytics**, **Stage 4: explainable relative-value signal classification**, and **Stage 5: walk-forward backtesting**. It does not download live MCX data, provide financial advice, or execute trades.
 
 ## Features
 - Python FastAPI Backend structure
@@ -13,6 +13,7 @@ This repository implements **Stage 1: Project Foundation**, **Stage 2: MCX daily
 - CSV ingestion with structured validation reports and a data-status endpoint
 - Purity-adjusted ₹/gram normalization and expiry-aware relative-value analytics
 - Explainable signal classifications with liquidity-proxy and expiry filters
+- Historical relative-value backtesting with P&L, estimated costs and benchmark attribution
 
 ## Installation & Setup (Windows)
 
@@ -90,3 +91,13 @@ cd backend
 ```
 
 The command writes a separate `*_signals.csv` to `data/analytics/`. Read results from `GET /api/analytics/signals` and `GET /api/analytics/signals/{symbol}`. Classifications are descriptive analytics, not trading recommendations.
+
+## Stage 5: Walk-Forward Backtesting
+
+Stage 5 consumes Stage 3 normalized prices and Stage 4 signal outputs; details and limitations are documented in [docs/STAGE5_BACKTESTING.md](docs/STAGE5_BACKTESTING.md). After generating Stage 3 and Stage 4 output files, run from `backend/`:
+
+```powershell
+.\.venv\Scripts\python.exe -m app.backtest ..\data\analytics\DEMO_SYNTHETIC_MCX_BHAVCOPY_processed_normalized.csv ..\data\analytics\DEMO_SYNTHETIC_MCX_BHAVCOPY_processed_signals.csv
+```
+
+Machine-readable report, trade ledger, equity curve, and benchmark are written separately under `data/backtests/`. Read them via `GET /api/backtest/summary`, `/trades`, `/equity`, `/benchmark`, and `/report`. Backtest outputs are simulations, not executable fills or recommendations.

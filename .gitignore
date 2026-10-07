@@ -17,3 +17,7 @@ data/processed/*
 # Generated Stage 3 analytics output
 data/analytics/*
 !data/analytics/.gitkeep
+
+# Generated Stage 5 backtest reports and ledgers
+data/backtests/*
+!data/backtests/.gitkeep
