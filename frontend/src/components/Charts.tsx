@@ -25,12 +25,15 @@ function ChartFrame({ children, className = '', height }: { children: React.Reac
 const axisProps = { tick: { fill: '#899491', fontSize: 11 }, axisLine: { stroke: '#303837' }, tickLine: false };
 const tooltipProps = { contentStyle: { background: '#1b2120', border: '1px solid #39413e', borderRadius: 4, color: '#e7ebe7', fontSize: 12 }, itemStyle: { color: '#e7ebe7' }, labelStyle: { color: '#aeb8b3', marginBottom: 5 } };
 
-export function NormalizedComparisonChart({ rows, height = 310 }: { rows: NormalizedRecord[]; height?: number }) {
+export function NormalizedComparisonChart({ rows, height = 310, symbolLegend = false }: { rows: NormalizedRecord[]; height?: number; symbolLegend?: boolean }) {
   const gradientId = useId().replaceAll(':', '');
   const contractIds = [...new Set(rows.map((row) => row.contract_id))].sort();
   if (!rows.length) return <EmptyState title="No normalized observations" message="Normalized contract prices will appear when analytics data is available." />;
   const dates = [...new Set(rows.map((row) => row.trade_date))].sort();
-  const series = contractIds.map((contractId, index) => ({ key: `series${index}`, contractId, label: compactContract(contractId), color: SERIES_COLORS[index % SERIES_COLORS.length] }));
+  const series = contractIds.map((contractId, index) => {
+    const symbol = rows.find((row) => row.contract_id === contractId)?.symbol ?? contractId;
+    return { key: `series${index}`, contractId, symbol, label: symbolLegend ? symbol : compactContract(contractId), color: SERIES_COLORS[index % SERIES_COLORS.length] };
+  });
   const chartData = dates.map((tradingDate) => {
     const point: Record<string, string | number | null> = { date: tradingDate };
     rows.filter((row) => row.trade_date === tradingDate).forEach((row) => {
@@ -46,7 +49,10 @@ export function NormalizedComparisonChart({ rows, height = 310 }: { rows: Normal
         <CartesianGrid stroke="#29312f" strokeDasharray="3 6" vertical={false} />
         <XAxis dataKey="date" tickFormatter={formatShortDate} minTickGap={28} {...axisProps} />
         <YAxis tickFormatter={(value) => `₹${Math.round(Number(value))}`} width={66} domain={['auto', 'auto']} {...axisProps} />
-        <Tooltip {...tooltipProps} labelFormatter={(value) => formatShortDate(String(value))} formatter={(value) => [formatCurrency(value as number | string), '999-fineness ₹/gram']} />
+        <Tooltip {...tooltipProps} labelFormatter={(value) => formatShortDate(String(value))} formatter={(value, name) => {
+          const item = series.find((entry) => entry.label === String(name));
+          return [formatCurrency(value as number | string), symbolLegend && item ? `${item.symbol} · ${item.contractId}` : '999-fineness ₹/gram'];
+        }} />
         <Legend verticalAlign="bottom" align="left" height={38} iconType="plainline" wrapperStyle={{ color: '#aab4af', fontSize: 11, paddingTop: 10 }} />
         {series.map((item) => <Line key={item.key} type="monotone" dataKey={item.key} name={item.label} stroke={item.color} strokeWidth={2} dot={{ r: 2.5, strokeWidth: 0, fill: item.color }} activeDot={{ r: 4 }} connectNulls={false} />)}
       </LineChart>
