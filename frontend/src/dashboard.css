@@ -106,6 +106,11 @@ a { color: inherit; }
 .overview-caption svg:last-child { color: #7c8178; }
 
 .metric-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px; }
+.overview-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.overview-kpis .metric-tile { min-height: 108px; padding: 15px 17px; }
+.overview-kpis .metric-tile > strong { font-size: 25px; }
+.overview-kpis .metric-head { color: #a1aca5; font-size: 11px; }
+.overview-chart-caption { padding: 0 2px; color: #77837c; font-size: 9px; line-height: 1.55; }
 .metric-tile { min-height: 103px; padding: 13px 13px 11px; display: flex; flex-direction: column; justify-content: space-between; border-color: #303935; background: #19201e; }
 .metric-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: #8c9891; font-size: 10px; }
 .metric-icon { color: #92825d; }
@@ -316,6 +321,7 @@ a { color: inherit; }
   .main-content { padding-left: 22px; padding-right: 22px; }
   .topbar, .app-footer { padding-left: 22px; padding-right: 22px; }
   .metric-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .overview-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .backtest-metrics { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .scanner-layout, .signal-layout { grid-template-columns: minmax(0, 1fr); }
   .scanner-detail-panel, .signal-detail-panel { position: static; }
@@ -354,6 +360,11 @@ a { color: inherit; }
   .overview-date-range, .record-count { border-left: 0; padding-left: 0; }
   .record-count { flex-direction: row; align-items: baseline; justify-content: space-between; }
   .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+  .overview-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .overview-kpis .metric-tile { min-height: 94px; padding: 9px; }
+  .overview-kpis .metric-tile > strong { font-size: 18px; }
+  .overview-kpis .metric-head { font-size: 8px; }
+  .overview-kpis .metric-tile > small { font-size: 8px; }
   .backtest-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .metric-tile { min-height: 92px; padding: 11px; }
   .metric-tile > strong { font-size: 17px; }

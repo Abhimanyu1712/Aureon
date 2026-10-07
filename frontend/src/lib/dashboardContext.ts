@@ -2,6 +2,7 @@ import { createContext } from 'react';
 import type { DataResponse, DataStatus, HealthResponse, ListResponse, NormalizedRecord, RelativeValueRecord, Resource, SignalRecord, BacktestSummary, TradeRecord, EquityRecord, BenchmarkRecord, BacktestReport } from './api';
 
 export type DashboardSnapshot = {
+  reportDate: string;
   health: Resource<HealthResponse>;
   dataStatus: Resource<DataStatus>;
   normalized: Resource<ListResponse<NormalizedRecord>>;

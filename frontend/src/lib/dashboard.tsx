@@ -36,7 +36,8 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     ]).then(([health, dataStatus, normalized, relativeValue, signals, backtestSummary, backtestTrades, backtestEquity, backtestBenchmark, backtestReport]) => {
       if (!current) return;
       startTransition(() => {
-        setSnapshot({ health, dataStatus, normalized, relativeValue, signals, backtestSummary, backtestTrades, backtestEquity, backtestBenchmark, backtestReport });
+        const reportDate = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date()).toUpperCase();
+        setSnapshot({ reportDate, health, dataStatus, normalized, relativeValue, signals, backtestSummary, backtestTrades, backtestEquity, backtestBenchmark, backtestReport });
         setLoading(false);
         setRefreshing(false);
       });
