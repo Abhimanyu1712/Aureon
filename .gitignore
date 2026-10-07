@@ -1,0 +1,19 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+dist/
+.env
+
+# User-supplied real MCX CSVs (demo dataset under data/demo/ is committed)
+data/raw/*
+!data/raw/.gitkeep
+
+# Ingestion run output
+data/processed/*
+!data/processed/.gitkeep
+
+# Generated Stage 3 analytics output
+data/analytics/*
+!data/analytics/.gitkeep
