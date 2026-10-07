@@ -1,6 +1,6 @@
 # Stage 3: Contract Normalization and Relative Value
 
-Stage 3 derives comparable purity-adjusted prices and descriptive relative-value statistics from validated Stage 2 processed CSVs. It is analytics only: it does not predict gold prices or create trade signals.
+Stage 3 derives comparable purity-adjusted prices and descriptive relative-value statistics from validated Stage 2 processed CSVs. Stage 4 consumes these outputs for signal classification; Stage 3 itself does not predict gold prices or create trade signals.
 
 ## Contract Specifications
 

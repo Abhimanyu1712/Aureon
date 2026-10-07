@@ -4,7 +4,7 @@
 
 Aureon is a full-stack financial analytics platform built for **Hack in Hills '26 (Problem 03 — Commodity Derivatives Intelligence)**. 
 
-This repository implements **Stage 1: Project Foundation**, **Stage 2: MCX daily Bhavcopy ingestion and validation**, and **Stage 3: gold contract normalization and relative-value analytics**. It does not download live MCX data or generate trading signals.
+This repository implements **Stage 1: Project Foundation**, **Stage 2: MCX daily Bhavcopy ingestion and validation**, **Stage 3: gold contract normalization and relative-value analytics**, and **Stage 4: explainable relative-value signal classification**. It does not download live MCX data, provide financial advice, or execute trades.
 
 ## Features
 - Python FastAPI Backend structure
@@ -12,6 +12,7 @@ This repository implements **Stage 1: Project Foundation**, **Stage 2: MCX daily
 - Basic `/api/health` endpoint for connectivity
 - CSV ingestion with structured validation reports and a data-status endpoint
 - Purity-adjusted ₹/gram normalization and expiry-aware relative-value analytics
+- Explainable signal classifications with liquidity-proxy and expiry filters
 
 ## Installation & Setup (Windows)
 
@@ -78,3 +79,14 @@ cd backend
 ```
 
 The API exposes `GET /api/analytics/normalized`, `GET /api/analytics/relative-value`, and `GET /api/analytics/relative-value/{symbol}`. Outputs retain their DEMO or REAL/HISTORICAL provenance; synthetic results are not market observations.
+
+## Stage 4: Signal Classification
+
+Stage 4 consumes Stage 3 normalized and relative-value CSVs; it does not normalize prices again. Thresholds, filter precedence, demo limitations, and API details are documented in [docs/STAGE4_SIGNALS.md](docs/STAGE4_SIGNALS.md). After generating Stage 3 outputs, classify them with:
+
+```powershell
+cd backend
+.\.venv\Scripts\python.exe -m app.analytics.signal_pipeline ..\data\analytics\DEMO_SYNTHETIC_MCX_BHAVCOPY_processed_normalized.csv ..\data\analytics\DEMO_SYNTHETIC_MCX_BHAVCOPY_processed_relative_value.csv
+```
+
+The command writes a separate `*_signals.csv` to `data/analytics/`. Read results from `GET /api/analytics/signals` and `GET /api/analytics/signals/{symbol}`. Classifications are descriptive analytics, not trading recommendations.
