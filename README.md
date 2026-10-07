@@ -8,7 +8,7 @@ This repository implements **Stage 1: Project Foundation**, **Stage 2: MCX daily
 
 ## Features
 - Python FastAPI Backend structure
-- React + Vite Frontend skeleton
+- React + TypeScript research dashboard with responsive analytics, signal, contract, and backtest views
 - Basic `/api/health` endpoint for connectivity
 - CSV ingestion with structured validation reports and a data-status endpoint
 - Purity-adjusted ₹/gram normalization and expiry-aware relative-value analytics
