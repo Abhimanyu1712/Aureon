@@ -53,7 +53,7 @@ export function OverviewPage() {
           <SectionTitle title="Normalized gold price" meta={chartMonth ? `₹ / gram · latest common expiry month ${chartMonth}` : '₹ / gram · no common expiry month available'} />
           <div className="panel-unit-label">999 FINENESS BASIS</div>
         </div>
-        {snapshot.normalized.error ? <ErrorState title="Normalized data unavailable" onRetry={refresh} /> : loading && !snapshot.normalized.data ? <LoadingState label="Loading normalized prices" /> : <NormalizedComparisonChart rows={chartRows} symbolLegend />}
+        {snapshot.normalized.error ? <ErrorState title="Normalized data unavailable" onRetry={refresh} /> : loading && !snapshot.normalized.data ? <LoadingState label="Loading normalized prices" /> : <NormalizedComparisonChart rows={chartRows} />}
       </section>
       <div className="overview-chart-caption">Each line uses one exact contract per symbol in the latest expiry month shared across symbols. The contract expiry date remains distinct; no continuous near-month series is constructed.</div>
     </div>
