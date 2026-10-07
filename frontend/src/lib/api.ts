@@ -194,7 +194,8 @@ export type BacktestReport = BacktestSummary & {
   data_quality_notes: string[];
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api';
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ?? 'https://aureon-backend-kr29.onrender.com/api';
 
 async function requestJson<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`);
