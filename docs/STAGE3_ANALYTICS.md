@@ -73,11 +73,11 @@ From the repository root in PowerShell:
 
 ```powershell
 cd backend
-.\.venv\Scripts\python.exe -m app.ingest ..\data\demo\DEMO_SYNTHETIC_MCX_BHAVCOPY.csv --output-dir ..\data\processed\stage3_demo_input
-.\.venv\Scripts\python.exe -m app.analytics ..\data\processed\stage3_demo_input\DEMO_SYNTHETIC_MCX_BHAVCOPY_processed.csv
+.\.venv\Scripts\python.exe -m app.ingest ..\data\demo\DEMO_SYNTHETIC_MCX_BHAVCOPY.csv
+.\.venv\Scripts\python.exe -m app.analytics ..\data\processed\DEMO_SYNTHETIC_MCX_BHAVCOPY_processed.csv
 ```
 
-The first command creates a separate Stage 2 processed input so an existing Stage 2 output is not replaced. The second writes `*_normalized.csv` and `*_relative_value.csv` under `data/analytics/`. For real/historical data, pass the corresponding validated Stage 2 processed CSV; its provenance remains REAL and is analyzed separately from DEMO.
+The first command writes the Stage 2 processed CSV and validation report directly under `data/processed/`; `/api/data/status` scans this directory (not nested subdirectories) for validation reports. The second writes `*_normalized.csv` and `*_relative_value.csv` under `data/analytics/`. For real/historical data, pass the corresponding validated Stage 2 processed CSV; its provenance remains REAL and is analyzed separately from DEMO.
 
 ## Read-Only API
 

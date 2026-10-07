@@ -75,11 +75,11 @@ Stage 3 consumes Stage 2 processed CSVs, writes derived files under `data/analyt
 
 ```powershell
 cd backend
-.\.venv\Scripts\python.exe -m app.ingest ..\data\demo\DEMO_SYNTHETIC_MCX_BHAVCOPY.csv --output-dir ..\data\processed\stage3_demo_input
-.\.venv\Scripts\python.exe -m app.analytics ..\data\processed\stage3_demo_input\DEMO_SYNTHETIC_MCX_BHAVCOPY_processed.csv
+.\.venv\Scripts\python.exe -m app.ingest ..\data\demo\DEMO_SYNTHETIC_MCX_BHAVCOPY.csv
+.\.venv\Scripts\python.exe -m app.analytics ..\data\processed\DEMO_SYNTHETIC_MCX_BHAVCOPY_processed.csv
 ```
 
-The API exposes `GET /api/analytics/normalized`, `GET /api/analytics/relative-value`, and `GET /api/analytics/relative-value/{symbol}`. Outputs retain their DEMO or REAL/HISTORICAL provenance; synthetic results are not market observations.
+The Stage 2 validation report is written directly into `data/processed/`, which is where `/api/data/status` scans for row counts. Stage 3 writes its normalized and relative-value outputs into `data/analytics/`. The API exposes `GET /api/analytics/normalized`, `GET /api/analytics/relative-value`, and `GET /api/analytics/relative-value/{symbol}`. Outputs retain their DEMO or REAL/HISTORICAL provenance; synthetic results are not market observations.
 
 ## Stage 4: Signal Classification
 
@@ -91,6 +91,26 @@ cd backend
 ```
 
 The command writes a separate `*_signals.csv` to `data/analytics/`. Read results from `GET /api/analytics/signals` and `GET /api/analytics/signals/{symbol}`. Classifications are descriptive analytics, not trading recommendations.
+
+## Render Backend Deployment
+
+The repository defines the Render service in [render.yaml](render.yaml). The **Root Directory must be the repository root (`.`)** because the committed demo CSV is stored at `data/demo/`, outside `backend/`.
+
+The Render Blueprint Build Command installs backend requirements and runs the existing Stage 2, Stage 3, and Stage 4 CLI pipelines. These create the ignored files `data/processed/DEMO_SYNTHETIC_MCX_BHAVCOPY_validation.json`, `data/analytics/DEMO_SYNTHETIC_MCX_BHAVCOPY_processed_normalized.csv`, and the corresponding relative-value and signal CSVs before startup. FastAPI startup checks for these artifacts and regenerates them through the same pipeline modules if missing or empty.
+
+For an existing dashboard-managed Render service, set **Root Directory** to `.` and use this Build Command:
+
+```sh
+pip install -r backend/requirements.txt && cd backend && python -m app.ingest ../data/demo/DEMO_SYNTHETIC_MCX_BHAVCOPY.csv && python -m app.analytics ../data/processed/DEMO_SYNTHETIC_MCX_BHAVCOPY_processed.csv && python -m app.analytics.signal_pipeline ../data/analytics/DEMO_SYNTHETIC_MCX_BHAVCOPY_processed_normalized.csv ../data/analytics/DEMO_SYNTHETIC_MCX_BHAVCOPY_processed_relative_value.csv
+```
+
+Start Command (from repository root):
+
+```sh
+cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+```
+
+Generated data remains Git-ignored; do not commit the generated artifacts. Keep Stage 2's default top-level `data/processed/` output because `/api/data/status` scans that directory for validation reports.
 
 ## Stage 5: Walk-Forward Backtesting
 

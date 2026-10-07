@@ -1,3 +1,6 @@
+from contextlib import asynccontextmanager
+from collections.abc import AsyncIterator
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -5,11 +8,19 @@ from app.api.analytics import router as analytics_router
 from app.api.backtest import router as backtest_router
 from app.api.signals import router as signals_router
 from app.ingest.status import get_data_status
+from app.startup import ensure_demo_artifacts
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    ensure_demo_artifacts()
+    yield
 
 app = FastAPI(
     title="Aureon API",
     description="Commodity Derivatives Intelligence for MCX Gold",
-    version="1.0.0"
+    version="1.0.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(

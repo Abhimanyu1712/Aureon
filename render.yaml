@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: aureon-backend
+    runtime: python
+    rootDir: .
+    buildCommand: >-
+      pip install -r backend/requirements.txt &&
+      cd backend &&
+      python -m app.ingest ../data/demo/DEMO_SYNTHETIC_MCX_BHAVCOPY.csv &&
+      python -m app.analytics ../data/processed/DEMO_SYNTHETIC_MCX_BHAVCOPY_processed.csv &&
+      python -m app.analytics.signal_pipeline
+      ../data/analytics/DEMO_SYNTHETIC_MCX_BHAVCOPY_processed_normalized.csv
+      ../data/analytics/DEMO_SYNTHETIC_MCX_BHAVCOPY_processed_relative_value.csv
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
